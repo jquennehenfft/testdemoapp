@@ -1,0 +1,29 @@
+name: Run Terraform
+
+# Déclencheurs d'exécution du workflow
+on:
+  workflow_dispatch:
+  # pull_request_target:
+  #   types: [assigned, opened, synchronize, reopened]
+  #   # paths:
+  #   #   - "infrastructure/**"
+  # push:
+    # paths:
+    #   - "infrastructure/**"
+
+# Permissions nécessaires pour le workflow
+permissions:
+  contents: write
+  id-token: write
+  issues: write
+  pull-requests: write
+
+# Définition des jobs du workflow
+jobs:
+  # Job pour obtenir l'image Docker
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # Install Terraform
+      - uses: hashicorp/setup-terraform@v3
+    
