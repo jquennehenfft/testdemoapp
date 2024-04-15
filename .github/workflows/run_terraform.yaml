@@ -1,29 +1,22 @@
-name: Run Terraform
-
-# Déclencheurs d'exécution du workflow
+name: demoapp-bdd-dump-test-run Scheduler
 on:
   workflow_dispatch:
-  # pull_request_target:
-  #   types: [assigned, opened, synchronize, reopened]
-  #   # paths:
-  #   #   - "infrastructure/**"
-  # push:
-    # paths:
-    #   - "infrastructure/**"
+  # schedule:
+  #   - cron: "*/5 * * * *"
 
-# Permissions nécessaires pour le workflow
-permissions:
-  contents: write
-  id-token: write
-  issues: write
-  pull-requests: write
+env:
+  RUN_FILE_NAME: run_terrafom.yml
+  REPOSITORY: demoapp-bdd-dump-test
+  ORGANISATION_NAME: FederationFrancaiseTennis
 
-# Définition des jobs du workflow
 jobs:
-  # Job pour obtenir l'image Docker
-  test:
+  run-infra:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        env: ["dev", "test"]
     steps:
-      # Install Terraform
-      - uses: hashicorp/setup-terraform@v3
-    
+      - name: run infra
+        run: |
+          gh workflow run $RUN_FILE_NAME --repo "https://github.com/$ORGANISATION_NAME/$REPOSITORY_NAME" --ref ${{ matrix.env }}
